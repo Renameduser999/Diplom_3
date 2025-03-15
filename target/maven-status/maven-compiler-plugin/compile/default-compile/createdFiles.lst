@@ -1,0 +1,7 @@
+pageobject\ForgotPasswordPage.class
+pageobject\LoginPage.class
+pageobject\ProfilePage.class
+UserData.class
+pageobject\RegisterPage.class
+driver\WebDriverCreator.class
+pageobject\StartPage.class
