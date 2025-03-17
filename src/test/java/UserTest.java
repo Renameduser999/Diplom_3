@@ -73,7 +73,9 @@ public class UserTest {
         objProfilePage.clickConstructorButton();
         assertEquals("ConstructorButtonFailed", "Оформить заказ", objStartPage.checkOrderButton());
     }
+
     @After
+    @DisplayName("Quit")
     public void cleanUp() {
         driver.quit();
     }

@@ -40,6 +40,7 @@ public class ConstructorTest {
     }
 
     @After
+    @DisplayName("Quit")
     public void cleanUp() {
         driver.quit();
     }

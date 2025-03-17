@@ -75,6 +75,7 @@ public class LoginPageTest {
         assertEquals("Ошибка", "Войти", objStartPage.checkOrderButton());
     }
     @After
+    @DisplayName("Quit")
     public void cleanUp() {
         driver.quit();
     }

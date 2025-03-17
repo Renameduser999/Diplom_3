@@ -57,10 +57,8 @@ public class RegisterTest {
     }
 
     @After
-    public void teardown() {
-        if (accessToken != null) {
-            UserData.deleteUser(accessToken);
-        }
+    @DisplayName("Quit")
+    public void cleanUp() {
         driver.quit();
     }
 }
