@@ -40,10 +40,9 @@ public class ConstructorTest {
     }
 
     @After
-    public void teardown() {
-        if (accessToken != null) {
-            UserData.deleteUser(accessToken);
-        }
-           driver.quit();
+    public void cleanUp() {
+        driver.quit();
     }
+
+
 }

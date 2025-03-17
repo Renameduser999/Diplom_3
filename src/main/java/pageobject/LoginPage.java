@@ -21,11 +21,8 @@ public class LoginPage {
 
     @Step("Пройти авторизацию")
     public void login (String email, String password){
-        try{
-            Thread.sleep(1000);
-        }
-        catch(InterruptedException ignored){
-        }
+        new WebDriverWait(driver, Duration.ofSeconds(15))
+                .until(ExpectedConditions.visibilityOfElementLocated(loginButton));
 
         driver.findElement(emailField).clear();
         driver.findElement(emailField).sendKeys(email);

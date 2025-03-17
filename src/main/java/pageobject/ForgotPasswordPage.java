@@ -13,13 +13,13 @@ public class ForgotPasswordPage {
     public ForgotPasswordPage(WebDriver driver) {
         this.driver = driver;
     }
-    private final static String PasswordRecoveryPage = "https://stellarburgers.nomoreparties.site/login";
+    private final static String PASSWORDRECOVERYPAGE = "https://stellarburgers.nomoreparties.site/login";
 
     private final By restorePasswordButton = By.xpath(".//a[text()='Восстановить пароль']"); //кнопка "Восстановить пароль"
 
     private final By loginButton = By.xpath(".//a[@class='Auth_link__1fOlj']"); //кнопка-ссылка "Войти" на странице "Восстановление пароля"
     @Step("Открыть страницу <Восстановление пароля>")
-    public void openRestorePage (){  driver.get(PasswordRecoveryPage);  }
+    public void openRestorePage (){  driver.get(PASSWORDRECOVERYPAGE);  }
 
     @Step("Выполнить вход по кнопке <Войти> в форме восстановления пароля")
     public void clickForgotPassword (){

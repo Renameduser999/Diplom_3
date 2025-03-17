@@ -27,9 +27,9 @@ public class WebDriverCreator {
     }
 
     public static WebDriver createYandexDriver() {
-        System.setProperty ("webdriver.chrome.driver", "C:/WebDriver/bin/yandexdriver.exe");
+        System.setProperty ("webdriver.chrome.driver", "src/test/resources/yandexdriver.exe");
         ChromeOptions options = new ChromeOptions();
-        options.setBinary("C:/Users/lenovo/AppData/Local/Yandex/YandexBrowser/Application/browser.exe");
+        options.setBinary("/AppData/Local/Yandex/YandexBrowser/Application/browser.exe");
         return new ChromeDriver(options);
     }
 }

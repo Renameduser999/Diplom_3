@@ -74,10 +74,7 @@ public class UserTest {
         assertEquals("ConstructorButtonFailed", "Оформить заказ", objStartPage.checkOrderButton());
     }
     @After
-    public void teardown() {
-        if (accessToken != null) {
-            UserData.deleteUser(accessToken);
-        }
+    public void cleanUp() {
         driver.quit();
     }
 }

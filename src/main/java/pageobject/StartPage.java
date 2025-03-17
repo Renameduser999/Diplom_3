@@ -11,7 +11,7 @@ import org.openqa.selenium.WebElement;
 
 public class StartPage {
     private final WebDriver driver;
-    private final static String startPage = "https://stellarburgers.nomoreparties.site/";
+    private final static String STARTPAGE = "https://stellarburgers.nomoreparties.site/";
 
     public StartPage(WebDriver driver) {
         this.driver = driver;
@@ -34,7 +34,7 @@ public class StartPage {
 
     @Step("Открыть главную страницу")
     public void openStartPage (){
-        driver.get(startPage);
+        driver.get(STARTPAGE);
     }
 
     @Step("Войти в аккаунт на главной странице")

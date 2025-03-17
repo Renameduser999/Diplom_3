@@ -75,10 +75,7 @@ public class LoginPageTest {
         assertEquals("Ошибка", "Войти", objStartPage.checkOrderButton());
     }
     @After
-    public void teardown() {
-        if (accessToken != null) {
-            UserData.deleteUser(accessToken);
-        }
+    public void cleanUp() {
         driver.quit();
     }
 }
