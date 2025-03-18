@@ -13,6 +13,7 @@ public class UserData {
     private final String password = "123456" + new Random().nextInt(10000);
     private final String name = "user" + new Random().nextInt(10000);
 
+
     public String getRandomName() {
         return this.name;
     }
@@ -34,6 +35,8 @@ public class UserData {
                 .build();
     }
 
+
+    public static final String URL = "https://stellarburgers.nomoreparties.site";
     public static final String USER = "/api/auth/user";
     @Step("Удаление пользователя.")
     public static void deleteUser(String accessToken) {
@@ -44,8 +47,16 @@ public class UserData {
                 .header("Authorization", accessToken)
                 .spec(baseSpecification())
                 .when()
-                .delete(USER)
+                .delete(URL + USER)
                 .then();
 
     }
+
+//    @Step("Удаление пользователя")
+//    public static Response deleteUser(String accessToken) {
+//        return given()
+//                .header("Authorization", accessToken)
+//                .when()
+//                .delete(URL + DELETE_USER);
+//    }
 }

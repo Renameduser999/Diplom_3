@@ -74,9 +74,12 @@ public class LoginPageTest {
         StartPage objStartPage = new StartPage(driver);
         assertEquals("Ошибка", "Войти", objStartPage.checkOrderButton());
     }
+
     @After
-    @DisplayName("Quit")
-    public void cleanUp() {
+    public void teardown() {
+        if (accessToken != null) {
+            UserData.deleteUser(accessToken);
+        }
         driver.quit();
     }
 }
