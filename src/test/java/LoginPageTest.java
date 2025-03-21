@@ -1,85 +1,106 @@
-import driver.WebDriverCreator;
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import pageobject.ForgotPasswordPage;
-import pageobject.LoginPage;
-import pageobject.RegisterPage;
+import pageobject.AccountPage;
 import pageobject.StartPage;
-import static org.junit.Assert.assertEquals;
+import pageobject.UserPage;
+import java.util.concurrent.TimeUnit;
+
+import static driver.WebDriverCreator.getWebDriver;
+import static userdata.UserApi.createUser;
+import static userdata.UserApi.deleteUser;
+import static userdata.UserData.*;
+import static userdata.UserData.BASE_URI;
+import static userdata.UserApi.accessToken;
 
 public class LoginPageTest {
-    private RegisterPage objRegisterPage;
-    private LoginPage objLoginPage;
     private WebDriver driver;
-    private String email;
-    private String password;
-    String accessToken;
 
-   @Before
-    public void before() {
-       driver = WebDriverCreator.createWebDriver();
+    private String login;
+    private String password6; // пароль 6 символов
+    private String firstName;
+    StartPage startPage;
+    UserPage userPage;
+    AccountPage accountPage;
 
-       UserData userData = new UserData();
-       String name = userData.getRandomName();
-       email = userData.getRandomEmail();
-       password = userData.getRandomPassword();
-       objRegisterPage = new RegisterPage(driver);
-       objRegisterPage.openRegisterPage();
-       objRegisterPage.createUser(name,email,password);
+    @Before
+    public void setUp() {
+        // Инициализация WebDriver
+        driver = getWebDriver();
+        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        driver.get(BASE_URI);
+
+        // Создание юзера и получение его accessToken
+        login = generateRandomLogin();
+        password6 = generateRandomPassword6();
+        firstName = generateRandomFirstName();
+        RestAssured.baseURI = BASE_URI;
+        createUser(login, password6, firstName);
+
+        // Экземпляры классов page object
+        startPage = new StartPage(driver);
+        userPage = new UserPage(driver);
+        accountPage = new AccountPage(driver);
+
+        // Авторизация перед тестом
+        startPage.clickLoginAccountButton();
+        userPage.setInputData(login, password6);
+        startPage.waitAuthorization();
     }
 
     @Test
-    @DisplayName("Login to personal account on the start page")
-    public void startPageTest() {
-        StartPage objStartPage = new StartPage(driver);
-        objStartPage.openStartPage();
-        objStartPage.checkAuthorization();
-        objLoginPage = new LoginPage(driver);
-        objLoginPage.login(email, password);
-        assertEquals("Ошибка", "Войти", objStartPage.checkOrderButton());
-    }
-    @Test
-    @DisplayName("Personal account on the start page")
-    public void personalAccountTest() {
-        StartPage objStartPage = new StartPage(driver);
-        objStartPage.openStartPage();
-        objStartPage.checkPersonalArea();
-        objLoginPage = new LoginPage(driver);
-        objLoginPage.login(email, password);
-        assertEquals("Ошибка", "Войти", objStartPage.checkOrderButton());
+    @DisplayName("Переход по клику «Личный кабинет»")
+    public void followPersonalAccountButtonTest() {
+
+        startPage.clickPersonalAccountButton();
+        accountPage.waitLoadingProfilePage();
+
+        Assert.assertTrue(accountPage.checkLoadingProfilePage());
     }
 
     @Test
-    @DisplayName("User login via the link on the registration page")
-    public void registrationLinkTest() {
-        objRegisterPage.openRegisterPage();
-        objRegisterPage.clickAuthLinkLogin();
-        LoginPage objLoginPage = new LoginPage(driver);
-        objLoginPage.login(email, password);
-        StartPage objStartPage = new StartPage(driver);
-        assertEquals("Ошибка", "Войти", objStartPage.checkOrderButton());
+    @DisplayName("переход по клику на «Конструктор» ")
+    public void followConstructorButtonTest(){
+
+        startPage.clickPersonalAccountButton();
+        accountPage.waitLoadingProfilePage();
+        accountPage.clickConstructorButton();
+        startPage.waitLoadingMainPage();
+
+        Assert.assertTrue(startPage.isAssembleBurgerTextVisible());
     }
 
     @Test
-    @DisplayName("Login on the password reset page")
-    public void restorePasswordLinkTest() {
-        ForgotPasswordPage objForgotPasswordPage = new ForgotPasswordPage(driver);
-        objForgotPasswordPage.openRestorePage();
-        objForgotPasswordPage.clickForgotPassword();
-        LoginPage objLoginPage = new LoginPage(driver);
-        objLoginPage.login(email,password);
-        StartPage objStartPage = new StartPage(driver);
-        assertEquals("Ошибка", "Войти", objStartPage.checkOrderButton());
+    @DisplayName("переход по клику на лого «Stellar Burgers»")
+    public void followLogoTest(){
+
+        startPage.clickPersonalAccountButton();
+        accountPage.waitLoadingProfilePage();
+        accountPage.clickLogo();
+        startPage.waitLoadingMainPage();
+
+        Assert.assertTrue(startPage.isAssembleBurgerTextVisible());
+    }
+
+    @Test
+    @DisplayName("выход по кнопке «Выйти» в личном кабинете")
+    public void followExitButtonTest(){
+
+        startPage.clickPersonalAccountButton();
+        accountPage.waitLoadingProfilePage();
+        accountPage.clickExitButton();
+        userPage.waitLoadingLoginPage();
+
+        Assert.assertTrue(userPage.checkLoadingLoginPage());
     }
 
     @After
-    public void teardown() {
-        if (accessToken != null) {
-            UserData.deleteUser(accessToken);
-        }
+    public void tearDown() {
         driver.quit();
+        deleteUser(accessToken);
     }
 }

@@ -1,66 +1,80 @@
-
-import driver.WebDriverCreator;
 import io.qameta.allure.junit4.DisplayName;
-
+import io.restassured.RestAssured;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import pageobject.LoginPage;
-import pageobject.RegisterPage;
-import pageobject.StartPage;
+import pageobject.*;
 
-import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
+import static driver.WebDriverCreator.getWebDriver;
+import static userdata.UserData.*;
+import static userdata.UserApi.*;
 
 public class RegisterTest {
-    private RegisterPage objRegisterPage;
     private WebDriver driver;
-    private String name;
-    private String email;
-    private String password;
-    String accessToken;
 
+    private String login;
+    private String password6; // пароль 6 символов
+    private String password5; // пароль 5 символов - некорректный
+    private String firstName;
+    StartPage startPage;
+    UserPage userPage;
+    UserCreationPage userCreationPage;
 
     @Before
-    public void before() {
-        driver = WebDriverCreator.createWebDriver();
+    public void setUp() {
+        // Инициализация WebDriver
+        driver = getWebDriver();
+        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        driver.get(BASE_URI);
 
-        UserData userData = new UserData();
-        name = userData.getRandomName();
-        email = userData.getRandomEmail();
-        password = userData.getRandomPassword();
-        objRegisterPage = new RegisterPage(driver);
+        // Генерация данных для юзера
+        login = generateRandomLogin();
+        password6 = generateRandomPassword6();
+        password5 = generateRandomPassword5();
+        firstName = generateRandomFirstName();
+        RestAssured.baseURI = BASE_URI;
+
+        // Экземпляры классов page object
+        startPage = new StartPage(driver);
+        userPage = new UserPage(driver);
+        userCreationPage = new UserCreationPage(driver);
     }
 
     @Test
-    @DisplayName("Registration")
-    public void checkRegistrationTest() {
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
-        objRegisterPage.openRegisterPage();
-        objRegisterPage.createUser(name,email,password);
-        LoginPage objLoginPage = new LoginPage(driver);
-        objLoginPage.login(email, password);
-        StartPage objStartPage = new StartPage(driver);
-        assertEquals("Error", "Войти", objStartPage.checkOrderButton());
+    @DisplayName("Проверка успешной регистрации")
+    public void checkSuccessfulRegistrationTest(){
+
+        startPage.clickPersonalAccountButton();
+        userPage.clickRegisterButton();
+        userCreationPage.setInputData(login,password6, firstName);
+        userPage.waitLoadingLoginPage();
+
+        Assert.assertTrue(userPage.checkLoadingLoginPage());
+
+        // Авторизация созданного юзера (для получения accessToken) + удаление созданного юзера
+        loginUser(login, password6);
+        deleteUser(accessToken);
     }
 
     @Test
-    @DisplayName("Registration - error")
-    public void checkErrorMassageTest() {
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
-        objRegisterPage.openRegisterPage();
-        objRegisterPage.createUser(name,email,"12345");
-        objRegisterPage.getError();
-        assertEquals("Error", "Некорректный пароль", objRegisterPage.getTextErrorMessage());
+    @DisplayName("Вывод ошибки для пароля менее 6 символов")
+    public void checkBadPasswordErrorRegistrationTest(){
+
+        startPage.clickPersonalAccountButton();
+        userPage.clickRegisterButton();
+        userCreationPage.setInputData(login, password5, firstName);
+        userPage.waitLoadingLoginPage();
+
+        Assert.assertTrue(userCreationPage.isVisibleIncorrectPassText());
+
+        // Удаление юзера не производится, тк юзер НЕ создан с паролем короче 6 символов
     }
 
     @After
-    public void teardown() {
-        if (accessToken != null) {
-            UserData.deleteUser(accessToken);
-        }
-        driver.quit();
-    }
+    public void tearDown() { driver.quit(); }
+
 }

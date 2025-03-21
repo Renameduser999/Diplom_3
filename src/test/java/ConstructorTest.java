@@ -1,4 +1,3 @@
-import driver.WebDriverCreator;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.After;
 import org.junit.Before;
@@ -6,44 +5,55 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import pageobject.StartPage;
 
-import static org.junit.Assert.assertTrue;
+import java.util.concurrent.TimeUnit;
+
+import static driver.WebDriverCreator.getWebDriver;
+import static org.junit.Assert.assertEquals;
+import static userdata.UserData.BASE_URI;
+
 public class ConstructorTest {
-    private StartPage objStartPage;
+
     private WebDriver driver;
-    String accessToken;
+    StartPage startPage;
 
     @Before
-    public void before() {
-        driver = WebDriverCreator.createWebDriver();
-        objStartPage = new StartPage(driver);
+    public void setUp() {
+        // Инициализация WebDriver
+        driver = getWebDriver();
+        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        driver.get(BASE_URI);
+
+        // Экземпляры классов page object
+        startPage = new StartPage(driver);
     }
 
     @Test
-    @DisplayName("Open tab Sauce")
-    public void checkSauce() {
-        objStartPage.openStartPage();
-        assertTrue("Ошибка", objStartPage.checkSauce());
+    @DisplayName("Переход к разделам «Соусы»")
+    public void jumpToSectionSauces(){
+
+        startPage.clickSaucesButton();
+        assertEquals("Не сработал переход к разделу «Соусы»", "Соусы", startPage.getButtonText());
     }
 
     @Test
-    @DisplayName("Open tab Buns")
-    public void checkBuns() {
-        objStartPage.openStartPage();
-        assertTrue("Ошибка", objStartPage.checkBuns());
+    @DisplayName("Переход к разделам «Начинки»")
+    public void jumpToSectionFillings(){
+
+        startPage.clickFillingsButton();
+        assertEquals("Не сработал переход к разделу Начинки", "Начинки", startPage.getButtonText());
     }
 
     @Test
-    @DisplayName("Open tab Fillings")
-    public void checkFillings() {
-        objStartPage.openStartPage();
-        assertTrue("Ошибка", objStartPage.checkFillings());
+    @DisplayName("Переход к разделам «Булки»")
+    public void jumpToSectionBuns(){
+
+        startPage.clickSaucesButton();
+        startPage.clickBunsButton();
+        assertEquals("Не сработал переход к разделу Булки", "Булки", startPage.getButtonText());
     }
 
     @After
-    @DisplayName("Quit")
-    public void cleanUp() {
+    public void tearDown() {
         driver.quit();
     }
-
-
 }

@@ -9,23 +9,20 @@ import java.time.Duration;
 
 public class ForgotPasswordPage {
 
-    private final WebDriver driver;
+    private WebDriver driver;
+
+    //Поля и локаторы:
+    //кнопка Войти
+    private By loginButton = By.xpath(".//a[contains(text(),'Войти')]");
+
     public ForgotPasswordPage(WebDriver driver) {
         this.driver = driver;
     }
-    private final static String PASSWORD_RECOVERY_PAGE = "https://stellarburgers.nomoreparties.site/login";
 
-    private final By restorePasswordButton = By.xpath(".//a[text()='Восстановить пароль']"); //кнопка "Восстановить пароль"
-
-    private final By loginButton = By.xpath(".//a[@class='Auth_link__1fOlj']"); //кнопка-ссылка "Войти" на странице "Восстановление пароля"
-    @Step("Открыть страницу <Восстановление пароля>")
-    public void openRestorePage (){  driver.get(PASSWORD_RECOVERY_PAGE);  }
-
-    @Step("Выполнить вход по кнопке <Войти> в форме восстановления пароля")
-    public void clickForgotPassword (){
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.elementToBeClickable(restorePasswordButton));
-        driver.findElement(restorePasswordButton).click();
+    //Методы:
+    @Step("проверка доступность и клик по кнопке «Войти»")
+    public void clickLoginButton(){
+        driver.findElement(loginButton).isEnabled();
         driver.findElement(loginButton).click();
     }
 }

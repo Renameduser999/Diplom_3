@@ -1,7 +1,11 @@
+driver\WebDriverCreator$BrowserName.class
 pageobject\ForgotPasswordPage.class
+userdata\UserObject.class
+pageobject\AccountPage.class
+pageobject\UserPage.class
 pageobject\LoginPage.class
-pageobject\ProfilePage.class
-UserData.class
-pageobject\RegisterPage.class
+pageobject\UserCreationPage.class
+userdata\UserApi.class
+userdata\UserData.class
 driver\WebDriverCreator.class
 pageobject\StartPage.class
