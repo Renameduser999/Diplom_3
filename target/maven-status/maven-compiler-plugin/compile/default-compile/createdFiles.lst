@@ -1,4 +1,3 @@
-driver\WebDriverCreator$BrowserName.class
 pageobject\ForgotPasswordPage.class
 userdata\UserObject.class
 pageobject\AccountPage.class

@@ -9,7 +9,7 @@ import pageobject.*;
 
 import java.util.concurrent.TimeUnit;
 
-import static driver.WebDriverCreator.getWebDriver;
+import static driver.WebDriverCreator.createWebDriver;
 import static userdata.UserData.*;
 import static userdata.UserApi.*;
 
@@ -29,7 +29,7 @@ public class UserTest {
     @Before
     public void setUp() {
         // Инициализация WebDriver
-        driver = getWebDriver();
+        driver = createWebDriver();
         driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         driver.get(BASE_URI);
 

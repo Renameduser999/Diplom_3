@@ -7,7 +7,7 @@ import pageobject.StartPage;
 
 import java.util.concurrent.TimeUnit;
 
-import static driver.WebDriverCreator.getWebDriver;
+import static driver.WebDriverCreator.createWebDriver;
 import static org.junit.Assert.assertEquals;
 import static userdata.UserData.BASE_URI;
 
@@ -19,7 +19,7 @@ public class ConstructorTest {
     @Before
     public void setUp() {
         // Инициализация WebDriver
-        driver = getWebDriver();
+        driver = createWebDriver();
         driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         driver.get(BASE_URI);
 

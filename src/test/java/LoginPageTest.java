@@ -10,7 +10,7 @@ import pageobject.StartPage;
 import pageobject.UserPage;
 import java.util.concurrent.TimeUnit;
 
-import static driver.WebDriverCreator.getWebDriver;
+import static driver.WebDriverCreator.createWebDriver;
 import static userdata.UserApi.createUser;
 import static userdata.UserApi.deleteUser;
 import static userdata.UserData.*;
@@ -30,7 +30,7 @@ public class LoginPageTest {
     @Before
     public void setUp() {
         // Инициализация WebDriver
-        driver = getWebDriver();
+        driver = createWebDriver();
         driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         driver.get(BASE_URI);
 
