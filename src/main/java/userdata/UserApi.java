@@ -43,7 +43,7 @@ public class UserApi {
     }
 
     @Step("Удаление пользователя")
-    public static void deleteUser(String accessToken) {
+    public static void deleteUser() {
         if (accessToken != null) {
             given()
                     .header("Content-type", "application/json")

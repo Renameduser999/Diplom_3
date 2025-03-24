@@ -100,6 +100,6 @@ public class UserTest {
     @After
     public void tearDown() {
         driver.quit();
-        deleteUser(accessToken);
+        deleteUser();
     }
 }

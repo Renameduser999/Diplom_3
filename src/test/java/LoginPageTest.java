@@ -101,6 +101,6 @@ public class LoginPageTest {
     @After
     public void tearDown() {
         driver.quit();
-        deleteUser(accessToken);
+        deleteUser();
     }
 }

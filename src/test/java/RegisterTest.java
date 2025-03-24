@@ -57,7 +57,7 @@ public class RegisterTest {
 
         // Авторизация созданного юзера (для получения accessToken) + удаление созданного юзера
         loginUser(login, password6);
-        deleteUser(accessToken);
+        deleteUser();
     }
 
     @Test
